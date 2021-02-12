@@ -1,4 +1,6 @@
 from collections import deque
+import itertools
+import sys
 
 class SliceableDeque(deque):
     def __getitem__(self, s):
