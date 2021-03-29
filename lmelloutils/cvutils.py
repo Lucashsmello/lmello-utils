@@ -16,11 +16,27 @@ def setFrame(vcap: cv.VideoCapture, fn: int):
 
 
 def iterFrames(vcap: cv.VideoCapture):
-    while(vcap.isOpened()):
-        _, img = vcap.read()
-        if(img is None):
-            break
-        yield img
+    class CVFrameIterator:
+        def __init__(self, vcap):
+            self.vcap = vcap
+
+        def __iter__(self):
+            return self
+
+        def __next__(self):
+            _, img = vcap.read()
+            if(img is None):
+                raise StopIteration
+            return img
+
+        def __len__(self):
+            return int(vcap.get(cv.CAP_PROP_FRAME_COUNT)) - int(vcap.get(cv.CAP_PROP_POS_FRAMES))
+    return CVFrameIterator(vcap)
+    # while(vcap.isOpened()):
+    #     _, img = vcap.read()
+    #     if(img is None):
+    #         break
+    #     yield img
 
 
 def concatGridImages(imgs):
@@ -56,13 +72,12 @@ def showWait(img, window_name='W', break_char='q', wait_time=1):
 def redfilter3(img):
     img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     h = img[:, :, 0]
-    l1=4
-    l2=32
+    l1 = 4
+    l2 = 32
     mask = np.ones(h.shape, dtype=np.float)
     diff = 90 - abs(h.astype(np.int16) - 90)
     mask[diff > l1] = 1-(diff[diff > l1]-l1)/(l2-l1)
     mask[diff > l2] = 0
-    
 
     img[:, :, 2] = img[:, :, 2] * mask
     img = cv.cvtColor(img, cv.COLOR_HSV2BGR)
@@ -90,3 +105,4 @@ def redfilter(img, s=125, s2=255, v=25, v2=255, r=-6, r2=5):
     mask = cv.bitwise_or(mask, mask2)
     res = cv.bitwise_and(img, img, mask=mask)
     return res
+

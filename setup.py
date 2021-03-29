@@ -2,7 +2,7 @@ from setuptools import setup
 
 modules=['cvutils', 'Point', 'jupyter_utils']
 setup(name='lmello-utils',
-    version='1.1',
+    version='1.2',
     description='Lucas Mello utilities',
     url='https://github.com/Lucashsmello/lmello-utils',
     author='Lucas Mello',
