@@ -1,8 +1,8 @@
 import numpy as np
 
 class Point(np.ndarray):
-    def __new__(cls, x, y):
-        return np.array([x, y]).view(cls)
+    def __new__(cls, x, y, **kwargs):
+        return np.array([x, y], **kwargs).view(cls)
 
     def __getattr__(self, attr):
         if attr == 'x':
