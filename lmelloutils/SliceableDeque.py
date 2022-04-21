@@ -1,17 +1,20 @@
 from collections import deque
 import itertools
-import sys
 
 class SliceableDeque(deque):
     def __getitem__(self, s):
-        try:
-            start, stop, step = s.start or 0, s.stop or sys.maxsize, s.step or 1
-        except AttributeError:  # not a slice but an int
+        if(isinstance(s, int)):
             return super().__getitem__(s)
-        else:
-            try:
-                return list(itertools.islice(self, start, stop, step))
-            except ValueError:  # incase of a negative slice object
-                length = len(self)
-                start, stop = length + start if start < 0 else start, length + stop if stop < 0 else stop
-                return list(itertools.islice(self, start, stop, step))
+        l = len(self)
+        start, stop = s.start or 0, s.stop or l
+        if(start < 0):
+            start += l
+        if(stop < 0):
+            stop += l
+        return list(itertools.islice(self, start, stop, s.step))
+
+    def last(self, n: int = 1):
+        if(n == 1):
+            return super().__getitem__(-1)
+        l = len(self)
+        return list(itertools.islice(self, l-n, l))

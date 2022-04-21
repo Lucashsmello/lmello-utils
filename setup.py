@@ -2,7 +2,7 @@ from setuptools import setup
 
 modules=['cvutils', 'Point', 'jupyter_utils', 'SliceableDeque']
 setup(name='lmello-utils',
-    version='1.4',
+    version='1.5',
     description='Lucas Mello utilities',
     url='https://github.com/Lucashsmello/lmello-utils',
     author='Lucas Mello',
